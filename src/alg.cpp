@@ -26,7 +26,8 @@ std::string infx2pstfx(const std::string& inf) {
 
     if (std::isdigit(static_cast<unsigned char>(symbol))) {
       std::string number = "";
-      while (pos < inf.size() && std::isdigit(static_cast<unsigned char>(inf[pos]))) {
+      while (pos < inf.size() &&
+             std::isdigit(static_cast<unsigned char>(inf[pos]))) {
         number += inf[pos];
         ++pos;
       }
