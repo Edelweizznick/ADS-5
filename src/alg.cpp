@@ -1,17 +1,19 @@
 // Copyright 2025 NNTU-CS
-#include <string>
-#include <map>
-#include "tstack.h"
+#include "alg.h"
 #include <cctype>
 #include <sstream>
+#include <string>
+#include "tstack.h"
+
+int getPriority(char op) {
+  if (op == '+' || op == '-') return 1;
+  if (op == '*' || op == '/') return 2;
+  return 0;
+}
 
 std::string infx2pstfx(const std::string& inf) {
   TStack<char, 100> operators;
   std::string postfix = "";
-  std::map<char, int> priority;
-
-  priority['+'] = priority['-'] = 1;
-  priority['*'] = priority['/'] = 2;
 
   size_t pos = 0;
   while (pos < inf.size()) {
@@ -50,9 +52,9 @@ std::string infx2pstfx(const std::string& inf) {
       continue;
     }
 
-    if (priority.find(symbol) != priority.end()) {
+    if (symbol == '+' || symbol == '-' || symbol == '*' || symbol == '/') {
       while (!operators.IsEmpty() && operators.Top() != '(' &&
-             priority[operators.Top()] >= priority[symbol]) {
+             getPriority(operators.Top()) >= getPriority(symbol)) {
         postfix += operators.Pop();
         postfix += " ";
       }
@@ -86,8 +88,8 @@ int eval(const std::string& pref) {
       numbers.Push(std::stoi(token));
     } else if (!token.empty()) {
       int right = numbers.Pop();
-      int left  = numbers.Pop();
-      char op   = token[0];
+      int left = numbers.Pop();
+      char op = token[0];
 
       if (op == '+')      numbers.Push(left + right);
       else if (op == '-') numbers.Push(left - right);
